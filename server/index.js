@@ -35,7 +35,8 @@ app.post('/books/create', (req, res) => {
     const bookAuthor = req.body.bookAuthor
     const bookGender = req.body.bookGender
     const bookStatus = req.body.bookStatus
-    const bookRoute = req.body.bookStatus
+    const bookRoute = req.body.bookRoute
+
     connection.query('INSERT INTO books (book_name, author, gender, book_status, book_route) VALUES ?, ?, ?, ?, ?', (err, response) => {
         if (err) throw err
         res.send(response)

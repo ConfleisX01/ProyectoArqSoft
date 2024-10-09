@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button'
 
 export default function LoginCard() {
 const login = () => {
-    window.location = '/index'
+    window.location = '/index/books'
 }
 
     return (

@@ -3,6 +3,8 @@ import './App.css';
 
 import LoginCard from './pages/login';
 import BooksIndex from './pages/booksIndex';
+import BooksList from './pages/booksList';
+import BookEdit from './pages/bookEdit';
 
 import {
   createBrowserRouter,
@@ -19,10 +21,12 @@ const router = createBrowserRouter([
     element: <BooksIndex />,
     children: [
       {
-        path: 'index/books'
+        path: '/index/books',
+        element: <BooksList />
       },
       {
-        path: 'index/edit'
+        path: '/index/edit',
+        element: <BookEdit />
       }
     ]
   }

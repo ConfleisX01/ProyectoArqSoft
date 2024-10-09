@@ -14,7 +14,7 @@ export default function BooksIndex() {
             <div>
                 <NavigationBar />
             </div>
-            <div>
+            <div className='p-2'>
                 <Outlet />
             </div>
         </>
@@ -24,16 +24,16 @@ export default function BooksIndex() {
 function NavigationBar() {
     return (
         <>
-            <Navbar expand="lg" className="bg-body-tertiary">
+            <Navbar expand="lg" className='shadow-sm'>
                 <Container>
-                    <Navbar.Brand href="/index">
+                    <Navbar.Brand href="/index/books">
                         <AcademicCapIcon style={{ 'height': '32px' }} />
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
-                            <Nav.Link href="/catalogo">Catalogo</Nav.Link>
-                            <Nav.Link href="/administracion">Administracion de libros</Nav.Link>
+                            <Nav.Link href="/index/books">Libros</Nav.Link>
+                            <Nav.Link href="/index/edit">Administración de libros</Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
