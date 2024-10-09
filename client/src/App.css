@@ -13,3 +13,7 @@
 .bg-eastern {
   background-color: #1aa6b7;
 }
+
+.pointer {
+  cursor: pointer;
+}

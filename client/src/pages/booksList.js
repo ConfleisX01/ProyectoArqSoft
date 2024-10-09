@@ -1,12 +1,41 @@
 import '../App.css'
 
-import { useState } from "react"
+import axios from 'axios'
+
+import { useEffect, useState } from "react"
 
 export default function BooksList() {
     const [bookSelected, setBookSelected] = useState("")
     const [bookName, setBookName] = useState('Ningun libro seleccionado')
     const [bookAuthor, setBookAuthor] = useState('Ningun libro seleccionado')
     const [bookGender, setBookGender] = useState('Ningun libro seleccionado')
+
+    const [booksData, setBooksData] = useState([])
+
+    useEffect(() => {
+        getBooksList()
+    }, [])
+
+    const loadBook = (index) => {
+        const book = booksData[index]
+
+        console.log(book.book_route)
+        setBookSelected(book.book_route)
+        setBookName(book.book_name)
+        setBookAuthor(book.author)
+        setBookGender(book.gender)
+    }
+
+    const getBooksList = () => {
+        axios.get('http://localhost:3001/books/list')
+            .then(function (response) {
+                setBooksData(response.data)
+            })
+            .catch(function (error) {
+                console.log('Error al obtener los libros')
+            })
+    }
+
     return (
         <>
             <div className="container-fluid">
@@ -17,7 +46,7 @@ export default function BooksList() {
                                 id="iframe"
                                 title="bookVisualizer"
                                 width={'100%'}
-                                height={'500px'}
+                                height={'800px'}
                                 src={bookSelected}
                             >
                             </iframe>
@@ -40,8 +69,17 @@ export default function BooksList() {
                         </div>
                     </div>
                     <div className="col-md-12">
-                        <div className="rounded shadow-sm p-2">
-
+                        <div className="rounded shadow-sm p-2 row gy-4">
+                            {
+                                booksData.map((book, index) => {
+                                    return (
+                                        <BookCard key={index}
+                                            bookName={book.book_name}
+                                            bookAuthor={book.author} 
+                                            onClick={() => loadBook(index)}/>
+                                    )
+                                })
+                            }
                         </div>
                     </div>
                 </div>
@@ -50,10 +88,19 @@ export default function BooksList() {
     )
 }
 
-function BookCard() {
+function BookCard(props) {
     return (
         <>
-
+            <div className='col-md-2'>
+                <div className='border p-2 overflow-hidden shadow-sm rounded d-flex flex-column pointer' style={{ height: '11rem', width: '10rem' }} onClick={props.onClick}>
+                    <div className='flex-grow-1'>
+                        <p className='m-0 fw-bold'>{props.bookName}</p>
+                    </div>
+                    <div className='text-end'>
+                        <small className='m-0'>{props.bookAuthor}</small>
+                    </div>
+                </div>
+            </div>
         </>
     )
 }

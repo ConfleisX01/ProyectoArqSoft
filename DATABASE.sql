@@ -15,4 +15,6 @@ CREATE TABLE books (
     gender VARCHAR(255),
     book_status BOOL DEFAULT TRUE,
     book_route LONGTEXT
-)	
+);
+
+SELECT * FROM books;
