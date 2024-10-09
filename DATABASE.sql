@@ -5,7 +5,7 @@ USE libros;
 CREATE TABLE users (
 	id_user INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_name VARCHAR(100),
-    user_password VARCHAR(8)
+    user_password VARCHAR(100)
 );
 
 CREATE TABLE books (

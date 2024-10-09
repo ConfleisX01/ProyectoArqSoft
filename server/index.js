@@ -24,14 +24,28 @@ app.use(cors({
 
 app.use(express.json())
 
-app.get('/login', (req, res) => {
+app.post('/login', (req, res) => {
     const userName = req.body.userName
     const userPassword = req.body.userPassword
 
     connection.query('SELECT * FROM users WHERE user_name = ? AND user_password = ?', [userName, userPassword], (err, response) => {
         if (err) throw err
         res.send(response)
+        console.log(response)
     })
+})
+
+app.post('/createAccount', (req, res) => {
+    const userName = req.body.userName
+    const userPassword = req.body.userPassword
+
+    connection.query('INSERT INTO users (user_name, user_password) VALUES (?, ?)',
+        [userName, userPassword],
+        (err, response) => {
+            if (err) throw err
+            res.send(response)
+        }
+    )
 })
 
 app.get('/books/list', (req, res) => {

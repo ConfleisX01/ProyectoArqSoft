@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 import LoginCard from './pages/login';
+import SingInCard from './pages/singIn';
 import BooksIndex from './pages/booksIndex';
 import BooksList from './pages/booksList';
 import BookEdit from './pages/bookEdit';
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <LoginCard />
+  },
+  {
+    path: '/singin',
+    element: <SingInCard />
   },
   {
     path: '/index',
