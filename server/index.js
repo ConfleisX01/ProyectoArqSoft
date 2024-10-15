@@ -2,15 +2,9 @@ const express = require('express')
 const mysql = require('mysql')
 const cors = require('cors')
 const bodyParser = require('body-parser')
+const { login, createNewAccount, getAll, insert, update, updateBookStatus } = require('./DAO/BookDAO')
 
 const app = express()
-
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'root',
-    database: 'libros'
-})
 
 app.use(bodyParser.json({ limit: '5mb' }));
 app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
@@ -24,54 +18,61 @@ app.use(cors({
 
 app.use(express.json())
 
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
     const userName = req.body.userName
     const userPassword = req.body.userPassword
 
-    connection.query('SELECT * FROM users WHERE user_name = ? AND user_password = ?', [userName, userPassword], (err, response) => {
-        if (err) throw err
+    try {
+        const response = await login(userName, userPassword)
         res.send(response)
-        console.log(response)
-    })
+    } catch (error) {
+        console.error(error)
+    }
 })
 
-app.post('/createAccount', (req, res) => {
+app.post('/createAccount', async (req, res) => {
     const userName = req.body.userName
     const userPassword = req.body.userPassword
 
-    connection.query('INSERT INTO users (user_name, user_password) VALUES (?, ?)',
-        [userName, userPassword],
-        (err, response) => {
-            if (err) throw err
-            res.send(response)
-        }
-    )
-})
-
-app.get('/books/list', (req, res) => {
-    connection.query('SELECT * FROM books', (err, response) => {
-        if (err) throw err
-
+    try {
+        const response = await createNewAccount(userName, userPassword)
         res.send(response)
-    })
+    } catch (error) {
+        console.error(error)
+    }
 })
 
-app.post('/books/create', (req, res) => {
+app.get('/books/list', async (req, res) => {
+    try {
+        const response = await getAll()
+        res.send(response)
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+app.post('/books/create', async (req, res) => {
     const bookName = req.body.bookName
     const bookAuthor = req.body.bookAuthor
     const bookGender = req.body.bookGender
     const bookStatus = req.body.bookStatus
     const bookRoute = req.body.bookRoute
 
-    connection.query('INSERT INTO books (book_name, author, gender, book_status, book_route) VALUES (?, ?, ?, ?, ?)',
-        [bookName, bookAuthor, bookGender, bookStatus, bookRoute],
-        (err, response) => {
-            if (err) throw err
-            res.send(response)
-        })
+    try {
+        const response = await insert(
+            bookName,
+            bookAuthor,
+            bookGender,
+            bookStatus,
+            bookRoute
+        )
+        res.send(error)
+    } catch (error) {
+        console.error(error)
+    }
 })
 
-app.post('/books/update', (req, res) => {
+app.post('/books/update', async (req, res) => {
     const bookId = req.body.bookId
     const bookName = req.body.bookName
     const bookAuthor = req.body.bookAuthor
@@ -79,25 +80,32 @@ app.post('/books/update', (req, res) => {
     const bookStatus = req.body.bookStatus
     const bookRoute = req.body.bookRoute
 
-    connection.query('UPDATE books SET book_name = ?, author = ?, gender = ?, book_status = ?, book_route = ? WHERE id_book = ?',
-        [bookName, bookAuthor, bookGender, bookStatus, bookRoute, bookId],
-        (err, response) => {
-            if (err) throw err
-            res.send(response)
-        })
+    try {
+        const response = await update(
+            bookId,
+            bookName,
+            bookAuthor,
+            bookGender,
+            bookStatus,
+            bookRoute
+        )
+        res.send(response)
+    } catch (error) {
+        console.error(error)
+    }
+
 })
 
-app.post('/books/updateStatus', (req, res) => {
+app.post('/books/updateStatus', async (req, res) => {
     const bookId = req.body.bookId
     const bookStatus = req.body.bookStatus
 
-    connection.query('UPDATE books SET book_status = ? WHERE id_book = ?',
-        [bookStatus, bookId],
-        (err, response) => {
-            if (err) throw err
-            res.send(response)
-        }
-    )
+    try {
+        const response = await updateBookStatus(bookId, bookStatus)
+        res.send(response)
+    } catch (error) {
+        console.error(error)
+    }
 })
 
 app.listen(3001, () => {

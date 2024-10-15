@@ -4,9 +4,9 @@ import Button from 'react-bootstrap/Button'
 import Alert from 'react-bootstrap/Alert';
 import { useEffect, useState } from 'react';
 
-import { EyeSlashIcon, EyeIcon, PencilIcon } from '@heroicons/react/24/solid';
+import axios from 'axios';
 
-import axios from 'axios'
+import { EyeSlashIcon, EyeIcon, PencilIcon } from '@heroicons/react/24/solid';
 
 export default function BookEdit() {
     const [alertText, setAlertText] = useState('Rellena el formulario sin dejar campos vacios')
@@ -26,13 +26,10 @@ export default function BookEdit() {
     const getBooksList = () => {
         axios.get('http://localhost:3001/books/list')
             .then(function (response) {
-                if (response.data.length > 0) {
-                    setBooksData(response.data)
-                }
+                setBooksData(response.data)
             })
             .catch(function (error) {
-                setAlertText('Error al obtener los libros')
-                setAlertType('danger')
+                console.log(error)
             })
     }
 
@@ -207,7 +204,7 @@ export default function BookEdit() {
                                         reader.readAsDataURL(file)
 
                                     }} />
-                                <Form.Control className='my-2 text-muted' hidden={false} readOnly={true} value={book} />
+                                <Form.Control className='my-2 text-muted' hidden={true} readOnly={true} value={book} />
                                 <div className='my-4 text-center'>
                                     {
                                         isUpdating ?

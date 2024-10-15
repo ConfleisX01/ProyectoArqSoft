@@ -72,14 +72,20 @@ export default function BooksList() {
                         <div className="rounded shadow-sm p-2 row gy-4">
                             {
                                 booksData.map((book, index) => {
-                                    return (
-                                        <BookCard key={index}
-                                            bookName={book.book_name}
-                                            bookAuthor={book.author} 
-                                            onClick={() => loadBook(index)}/>
-                                    )
+                                    if (book.book_status) {
+                                        return (
+                                            <BookCard key={index}
+                                                bookName={book.book_name}
+                                                bookAuthor={book.author}
+                                                onClick={() => loadBook(index)}
+                                            />
+                                        )
+                                    } else {
+                                        return null
+                                    }
                                 })
                             }
+
                         </div>
                     </div>
                 </div>
