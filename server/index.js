@@ -2,7 +2,11 @@ const express = require('express')
 const mysql = require('mysql')
 const cors = require('cors')
 const bodyParser = require('body-parser')
-const { login, createNewAccount, getAll, insert, update, updateBookStatus } = require('./DAO/BookDAO')
+
+const { validateLogin, validateCreateNewAccount } = require('./CQRS/CQRSLogin')
+const { validateInsertBook, validateUpdateBook } = require('./CQRS/CQRSBooks')
+const { getAll } = require('./DAO/BookDAO')
+const { BookPublic } = require('./VM/bookExport')
 
 const app = express()
 
@@ -23,7 +27,7 @@ app.post('/login', async (req, res) => {
     const userPassword = req.body.userPassword
 
     try {
-        const response = await login(userName, userPassword)
+        const response = validateLogin(userName, userPassword)
         res.send(response)
     } catch (error) {
         console.error(error)
@@ -35,7 +39,7 @@ app.post('/createAccount', async (req, res) => {
     const userPassword = req.body.userPassword
 
     try {
-        const response = await createNewAccount(userName, userPassword)
+        const response = validateCreateNewAccount(userName, userPassword)
         res.send(response)
     } catch (error) {
         console.error(error)
@@ -51,22 +55,42 @@ app.get('/books/list', async (req, res) => {
     }
 })
 
+app.get('/book/listPublic', async (req, res) => {
+    try {
+        const mappedBooks = []
+        const response = await getAll()
+        response.forEach(book => {
+            const newBook = new BookPublic(
+                book.id_book,
+                book.book_name,
+                book.author,
+                book.gender,
+                book.book_status,
+                book.book_route
+            )
+
+            mappedBooks.push(newBook)
+            res.status(200).send(mappedBooks)
+        });
+        console.log(mappedBooks)
+    } catch (error) {
+        console.error(error)
+    }
+})
+
 app.post('/books/create', async (req, res) => {
     const bookName = req.body.bookName
     const bookAuthor = req.body.bookAuthor
     const bookGender = req.body.bookGender
-    const bookStatus = req.body.bookStatus
     const bookRoute = req.body.bookRoute
 
     try {
-        const response = await insert(
-            bookName,
-            bookAuthor,
-            bookGender,
-            bookStatus,
-            bookRoute
-        )
-        res.send(error)
+        const validationResponse = validateInsertBook(bookName, bookAuthor, bookGender, bookRoute)
+        if (validationResponse.status) {
+            res.status(200).send('El libro se creo con exito')
+        } else {
+            res.status(422).send(validationResponse.message)
+        }
     } catch (error) {
         console.error(error)
     }
@@ -81,15 +105,13 @@ app.post('/books/update', async (req, res) => {
     const bookRoute = req.body.bookRoute
 
     try {
-        const response = await update(
-            bookId,
-            bookName,
-            bookAuthor,
-            bookGender,
-            bookStatus,
-            bookRoute
-        )
-        res.send(response)
+        const validationResponse = validateUpdateBook(bookId, bookName, bookAuthor, bookGender, bookStatus, bookRoute)
+
+        if (validationResponse.status) {
+            res.status(200).send("El libro se actualizo con exito")
+        } else {
+            res.status(422).send(validationResponse.message)
+        }
     } catch (error) {
         console.error(error)
     }
@@ -102,7 +124,11 @@ app.post('/books/updateStatus', async (req, res) => {
 
     try {
         const response = await updateBookStatus(bookId, bookStatus)
-        res.send(response)
+        if (response.status) {
+            res.send(response)
+        } else {
+            res.send(response)
+        }
     } catch (error) {
         console.error(error)
     }

@@ -67,27 +67,10 @@ function updateBookStatus(bookId, bookStatus) {
     })
 }
 
-function login(userName, userPassword) {
+function getBookById(bookId) {
     return new Promise((resolve, reject) => {
-        connection.query(
-            'SELECT * FROM users WHERE user_name = ? AND user_password = ?',
-            [userName, userPassword],
-            (err, response) => {
-                if (err) {
-                    reject(err)
-                } else {
-                    resolve(response)
-                }
-            }
-        )
-    })
-}
-
-function createNewAccount(userName, userPassword) {
-    return new Promise((resolve, reject) => {
-        connection.query(
-            'INSERT INTO users (user_name, user_password) VALUES (?, ?)',
-            [userName, userPassword],
+        connection.query('SELECT * FROM books WHERE id_book = ?',
+            [bookId],
             (err, response) => {
                 if (err) {
                     reject(err)
@@ -104,6 +87,5 @@ module.exports = {
     insert,
     update,
     updateBookStatus,
-    login,
-    createNewAccount
+    getBookById
 }

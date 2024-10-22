@@ -92,7 +92,7 @@ export default function BookEdit() {
 
         axios.post('http://localhost:3001/books/update', data)
             .then(function (response) {
-                if (response.status == '200') {
+                if (response.status == 200) {
                     setIsUpdating(false)
                     setAlertText('El libro se modifico con exito')
                     setAlertType('success')
@@ -101,8 +101,10 @@ export default function BookEdit() {
                 }
             })
             .catch(function (error) {
-                setAlertText('No se pudo comunicar con el servidor')
-                setAlertType('danger')
+                if (error.status >= 400 || error.status <= 500) {
+                    setAlertText(error.response.data)
+                    setAlertType('warning')
+                }
             })
     }
 
