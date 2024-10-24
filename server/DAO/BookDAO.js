@@ -1,5 +1,7 @@
 const mysql = require('mysql')
 
+const { BookPrivate } = require('../VM/bookImport')
+
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',

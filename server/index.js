@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 
 const { validateLogin, validateCreateNewAccount } = require('./CQRS/CQRSLogin')
 const { validateInsertBook, validateUpdateBook } = require('./CQRS/CQRSBooks')
+const { updateBookStatus } = require('./DAO/BookDAO')
 const { getAll } = require('./DAO/BookDAO')
 const { BookPublic } = require('./VM/bookExport')
 
@@ -27,7 +28,7 @@ app.post('/login', async (req, res) => {
     const userPassword = req.body.userPassword
 
     try {
-        const response = validateLogin(userName, userPassword)
+        const response = await validateLogin(userName, userPassword)
         res.send(response)
     } catch (error) {
         console.error(error)
@@ -68,11 +69,9 @@ app.get('/book/listPublic', async (req, res) => {
                 book.book_status,
                 book.book_route
             )
-
             mappedBooks.push(newBook)
-            res.status(200).send(mappedBooks)
         });
-        console.log(mappedBooks)
+        res.status(200).send(mappedBooks)
     } catch (error) {
         console.error(error)
     }

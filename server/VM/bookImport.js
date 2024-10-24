@@ -1,4 +1,4 @@
-export class BookPrivate {
+class BookPrivate {
     constructor(
         bookId,
         bookName,
@@ -14,4 +14,8 @@ export class BookPrivate {
         this.bookStatus = bookStatus
         this.bookRoute = bookRoute
     }
+}
+
+module.exports = {
+    BookPrivate
 }

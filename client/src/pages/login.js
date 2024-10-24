@@ -26,11 +26,11 @@ export default function LoginCard() {
             .then(function (response) {
                 console.log(response)
                 if (response.status === 200) {
-                    if (response.data.length === 0) {
+                    if (response.data.status === false) {
                         setAlertText('Error, usuario o contraseña no validas o el usuario no existe')
                         setIsShowingAlert(true)
                     }
-                    if (response.data.length === 1) {
+                    if (response.data.status === true) {
                         window.location = '/index/books'
                     }
                 }

@@ -1,3 +1,12 @@
+const mysql = require('mysql')
+
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'root',
+    database: 'libros'
+})
+
 function login(userName, userPassword) {
     return new Promise((resolve, reject) => {
         connection.query(
@@ -7,6 +16,9 @@ function login(userName, userPassword) {
                 if (err) {
                     reject(err)
                 } else {
+                    if (response.length === 0) {
+                        resolve('No se encontro el usuario')
+                    }
                     resolve(response)
                 }
             }

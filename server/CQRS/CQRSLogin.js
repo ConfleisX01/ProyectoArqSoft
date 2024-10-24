@@ -1,7 +1,7 @@
 const { login, createNewAccount } = require('../DAO/LoginDAO')
 
-function validateLogin(userName, password) {
-    const response = { status: false }
+async function validateLogin(userName, password) {
+    const response = { status: false, result: [] }
     if (userName.length <= 0) {
         return response
     }
@@ -10,8 +10,10 @@ function validateLogin(userName, password) {
         return response
     }
 
-    login(userName, password)
-    return response.status = true
+    const result = await login(userName, password)
+    response.result = result
+    response.status = true
+    return response
 }
 
 function validateCreateNewAccount(userName, password) {
